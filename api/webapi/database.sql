@@ -1,0 +1,31 @@
+
+CREATE DATABASE database_vendas;
+USE database_vendas;
+
+
+CREATE TABLE produto(
+   id SERIAL NOT NULL PRIMARY KEY,
+   produto VARCHAR(120) NOT NULL,
+   perc_comissao NUMBER(3, 2) NOT NULL,
+   created_date DATETIME
+)
+
+
+CREATE TABLE venda (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+
+) 
+
+
+CREATE TABLE  vendedor (
+    id SERIAL NOT NULL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+)
+
+
+CREATE TABLE cliente(
+   id SERIAL PRIMARY KEY
+   nome VARCHAR(120) NOT NULL,
+   created DATE NOT NULL DEFAULT CURRENT_DATE
+
+)
