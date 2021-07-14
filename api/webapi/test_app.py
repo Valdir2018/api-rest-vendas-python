@@ -24,29 +24,29 @@ class TestApp(TestCase):
     # @mock.patch('app.create_new_client_db')
     def test_insert_new_client_return_code_201(self):
         client = { 'nome': 'Valdir' }
-        response = self.client.post('/client', json=client)
+        response = self.client.post('/client/add', json=client)
         self.assertEqual(201, response.status_code)
 
     # @mock.patch('app.create_new_client_db')
     def test_insert_new_client_return_json(self):
         client = { 'nome': 'Jose' }
-        response = self.client.post('/client', json=client)
+        response = self.client.post('/client/add', json=client)
         self.assertEqual('application/json', response.content_type)
 
     def test_get_all_clients_return_code_200(self):
-        response = self.client.get('/clients')
+        response = self.client.get('/clients/')
         self.assertEqual(200, response.status_code)
 
     def test_get_all_clients_return_json(self):
-        response = self.client.get('/clients')
+        response = self.client.get('/clients/')
         self.assertEqual('application/json', response.content_type) 
 
     def test_get_products_return_code_200(self):
-        response = self.client.get('/product')
+        response = self.client.get('/product/Celular')
         self.assertEqual(200, response.status_code) 
 
     def test_get_products_return_json(self):
-        response = self.client.get('/product')
+        response = self.client.get('/product/Celular')
         self.assertEqual('application/json', response.content_type)
 
     def test_save_new_product_return_code_200(self):
@@ -65,6 +65,15 @@ class TestApp(TestCase):
 
     def test_get_one_seller_return_json(self):
         response = self.client.get('/seller/1')
+        self.assertEqual('application/json', response.content_type)
+
+        
+    def test_get_all_seller_return_code_200(self):
+        response = self.client.get('/seller/')
+        self.assertEqual(200, response.status_code)
+
+    def test_get_all_seller_return_json(self):
+        response = self.client.get('/seller/')
         self.assertEqual('application/json', response.content_type)
 
 
