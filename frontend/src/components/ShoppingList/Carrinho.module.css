@@ -1,0 +1,193 @@
+* {
+  font-family: "Arial", sans-serif;
+}
+
+.containerFlexrow,
+.contentLeft,
+.contentRight,
+.contentFooter,
+.buttons,
+table {
+  display: flex;
+}
+
+.contentLeft {
+  margin-top: 8rem;
+  margin-left: 4rem;
+  flex-direction: row;
+  border-right: 1px solid #c7c1c1;
+}
+
+.contentRight {
+  position: relative;
+  margin-top: 8rem;
+  margin-left: 2rem;
+}
+
+.contentLeft > form > h2,
+.contentRight > form > h2 {
+  color: #656463;
+  padding: 2rem 1rem;
+}
+
+.formGroupSales {
+  display: block;
+  margin: 1rem 0;
+}
+
+.formGroup {
+  display: inline-block;
+  margin: 1rem 0;
+}
+
+.formGroup > label,
+.formGroupSales > label {
+  display: inline;
+  font-size: 0.9rem;
+  color: #656463;
+  position: relative;
+  margin: 0.5rem 1rem;
+
+  font-weight: 600;
+}
+
+.formGroup > input,
+.formGroupSales > select,
+.formGroup > button,
+.buttons > .cancelar,
+.buttons > .confirmar {
+  display: block;
+}
+
+.formGroup > input,
+.formGroupSales > select {
+  padding: 12px 16px;
+  margin: 0.5rem 1rem;
+
+  border: 1px solid #cecece;
+  border-radius: 0.2rem;
+}
+
+.formGroupSales > select {
+  width: 400px;
+}
+
+.formGroup > button {
+  background: #00418a;
+  border: 0;
+  border-radius: 0.25rem;
+  color: #fff;
+
+  align-items: center;
+  padding: 13px 20px;
+  margin: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  flex-direction: column;
+  margin-left: 0.9rem;
+}
+
+thead > tr > th {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #5f5b56;
+}
+
+tbody > tr > td {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #656463;
+}
+
+th:first-child,
+td:first-child {
+  width: 300px;
+}
+
+th:nth-child(2),
+td:nth-child(2),
+th:nth-child(3),
+td:nth-child(3),
+th:nth-child(4),
+td:nth-child(4) {
+  align-items: flex-end;
+}
+
+th,
+td {
+  flex-direction: column;
+  display: inline-flex;
+  width: 132px;
+  position: relative;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+tr > td > i {
+  font-size: 1.3rem;
+  color: #a71919;
+  padding: 10px;
+  margin-left: 38px;
+  cursor: pointer;
+}
+
+tr > td > i:hover {
+  background: #ffc1c0;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.contentFooter {
+  position: absolute;
+  width: 400px;
+  left: 1rem;
+  margin-top: 140px;
+
+  justify-content: space-between;
+}
+
+.contentFooter > .title > span,
+.valorTotal > p {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #403c38;
+}
+
+.contentFooter > .valorTotal > p {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 1.5rem;
+}
+
+.buttons {
+  justify-content: space-between;
+  margin-top: 230px;
+}
+
+.buttons > button {
+  display: inline-flex;
+}
+
+.buttons > .cancelar,
+.buttons > .confirmar {
+  border: 0;
+  border-radius: 0.25rem;
+  color: #fff;
+  align-items: center;
+  padding: 13px 20px;
+  margin: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.buttons > .cancelar {
+  background: #00418a;
+}
+
+.buttons > .confirmar {
+  background: #007448;
+}

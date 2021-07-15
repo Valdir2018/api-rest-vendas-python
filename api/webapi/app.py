@@ -2,18 +2,22 @@ from flask import Flask, request, jsonify
 from connection import Connection
 from flask_cors import CORS
 import json
+import time
+
+current_hour = time.strftime('%H:%M:%S', time.localtime())
+current_datetime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
 
 webapp = Flask(__name__)
 CORS(webapp)
 
 conn = Connection('localhost', 5432, 'database_vendas', 'postgres', '12345')
 
-@webapp.route('/')
+@webapp.route('/app')
 def init():
     return 'My WebApp', 200
 
 @webapp.errorhandler(400)
-@webapp.route('/client/<int:id>', methods=['GET'])
+@webapp.route('/app/client/<int:id>', methods=['GET'])
 def get_client(id):
     if request.method == 'GET':
         try:
@@ -21,8 +25,8 @@ def get_client(id):
             query = """SELECT * FROM clientes WHERE id = {} """.format(id)
             cursor_pg.execute(query)
 
-            data = cursor_pg.fetchone()
-            response = {  "id": data[0], "nome": data[1], "data_criacao": data[2] }
+            res = cursor_pg.fetchone()
+            response = {  "id": res[0], "nome": res[1], "data_criacao": res[2] }
 
         except Exception:
             message = "Cliente  não encontrado "
@@ -31,7 +35,7 @@ def get_client(id):
     return jsonify(response), 200
 
 @webapp.errorhandler(400)
-@webapp.route('/client/add', methods=['POST'])
+@webapp.route('/app/client/add', methods=['POST'])
 def insert_new_client():
     if request.method == 'POST':
         try:
@@ -52,7 +56,7 @@ def insert_new_client():
             return jsonify({}), 201  
 
 @webapp.errorhandler(400)
-@webapp.route('/clients/', methods=['GET'])
+@webapp.route('/app/clients/', methods=['GET'])
 def get_all_clients():
     try:
         cursor_pg = conn.cursor() 
@@ -68,7 +72,7 @@ def get_all_clients():
         return jsonify({'Erro':'Houve um erro interno'}), 400   
 
 @webapp.errorhandler(400)
-@webapp.route('/product/<string:name>', methods=['GET'])
+@webapp.route('/app/product/<string:name>', methods=['GET'])
 def get_product(name):
     if request.method == 'GET':
         
@@ -90,7 +94,7 @@ def get_product(name):
 
     
 @webapp.errorhandler(400)
-@webapp.route('/product/add', methods=['GET','POST'])
+@webapp.route('/app/product/add', methods=['POST'])
 def save_new_product():
     if request.method == 'POST':
         try:
@@ -116,7 +120,7 @@ def save_new_product():
   
 
 @webapp.errorhandler(400)
-@webapp.route('/seller/<int:id>', methods=['GET'])
+@webapp.route('/app/seller/<int:id>', methods=['GET'])
 def get_one_seller(id):
     if request.method == 'GET':
        try:
@@ -128,19 +132,40 @@ def get_one_seller(id):
             results = cursor_pg.fetchall()
             all_sellers = []
 
-            if not results:
-                return jsonify({ 'erro': 'Nenhum vendedor encontrado'}), 400
-
-            for x in results:
-                all_sellers.append({ "id" : x[0], "nome": x[1] })
+            for res in results:
+                all_sellers.append({ "id" : res[0], "nome": res[1] })
             return jsonify(all_sellers), 200
 
        except Exception:
-           return jsonify({})    
-    
+           return jsonify({ 'erro': 'Nenhum vendedor encontrado'}), 400    
 
 @webapp.errorhandler(400)
-@webapp.route('/seller/', methods=['GET'])
+@webapp.route('/app/seller/<string:name>', methods=['GET'])
+def get_commission_seller(name):
+    if request.method == 'GET':
+        try:
+            
+            cursor_pg = conn.cursor()
+            query = """SELECT id, vendedor, comissao FROM vendas WHERE vendedor LIKE '%{seler}%' """.format(seler=name)
+
+            cursor_pg.execute(query)
+            results = cursor_pg.fetchall()
+
+            if not results:
+                return jsonify({ 'erro':'Nenhum resultado encontrado' }), 400
+
+            current_commission = []
+
+            for res in results:                
+                current_commission.append( { "id" : res[0], "vendedor": res[1], "comissao": res[2] })
+
+            return jsonify(current_commission), 200    
+
+        except Exception:
+            return jsonify({ 'erro':'Nenhum resultado encontrado' }),      
+
+@webapp.errorhandler(400)
+@webapp.route('/app/seller/', methods=['GET'])
 def get_all_seller():
     if request.method == 'GET':
         try:
@@ -160,7 +185,7 @@ def get_all_seller():
 
 
 @webapp.errorhandler(400)
-@webapp.route('/seller/add', methods=['GET','POST'])
+@webapp.route('/app/seller/add', methods=['POST'])
 def save_new_seller():
     if request.method == 'POST':
         seller = json.loads(request.data)
@@ -180,6 +205,28 @@ def save_new_seller():
                     
         except Exception:
             return jsonify({})
+
+@webapp.errorhandler(400)
+@webapp.route('/app/sales_list/add', methods=['POST'])
+def save_list_sales():
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        try:
+            if current_hour >= '00:00:00' and current_hour <= '12:00:00':
+                commission = data['subTotal'] * 0.04
+            elif current_hour >= '12:00:01' and current_hour <= '23:59:59':
+                commission = data['subTotal'] * 0.05
+
+            cursor_pg = conn.cursor() 
+            query = """ INSERT INTO vendas (vendedor, cliente, total_vendas, quantidade, comissao, hora_venda) VALUES ('{}','{}','{}',{},{},'{}') 
+            """.format(data['vendedor'], data['cliente'], data['subTotal'], data['quantidade'], commission, current_hour) 
+            
+            cursor_pg.execute(query)
+            conn.commit()
+
+            return jsonify({'success': 'venda registrada com sucesso'}), 201
+        except Exception:    
+            return jsonify({ 'erro': 'venda não registrada'}) 
 
 
 if __name__ == '__main__':

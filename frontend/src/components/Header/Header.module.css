@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.containerFlexrow {
+  width: 100%;
+  display: flex;
+  position: absolute;
+  background: #f0f0f0;
+  flex-direction: row;
+
+  border-bottom: 1px solid #c7c1c1;
+}
+
+.containerFlexrow > .topo {
+  display: flex;
+  height: 90px;
+  width: 100%;
+  padding: 1.2rem 5rem;
+  left: 10rem;
+}
+
+.topo > img {
+  display: flex;
+  width: 200px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topo > div {
+  display: inline-flex;
+  justify-content: flex-start;
+
+  flex: 1;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #18a272;
+
+  margin-left: 20rem;
+}
